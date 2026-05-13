@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Profile - Linkhub</title>
+  <style>
+    body { font-family: system-ui, Arial, sans-serif; margin: 24px; }
+    .topbar { display:flex; justify-content:space-between; align-items:center; gap: 12px; flex-wrap:wrap; }
+    .pill { padding: 8px 12px; border: 1px solid #e5e5e5; border-radius: 999px; font-size: 14px; }
+    .container { max-width: 620px; margin: 0 auto; }
+    .profile-card { border: 1px solid #e5e5e5; border-radius: 14px; padding: 24px; text-align: center; }
+    .avatar-large { width: 80px; height: 80px; border-radius: 50%; background:#111; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size: 32px; margin: 0 auto 16px; }
+    .profile-name { font-size: 24px; font-weight: 700; margin: 0; }
+    .profile-handle { color:#666; font-size: 14px; margin: 4px 0 16px; }
+    .profile-bio { color:#555; font-size: 14px; line-height: 1.6; margin: 12px 0; }
+    .profile-stats { display:flex; justify-content:space-around; margin: 20px 0; padding: 16px 0; border-top: 1px solid #f0f0f0; border-bottom: 1px solid #f0f0f0; }
+    .stat { text-align: center; }
+    .stat-number { font-size: 20px; font-weight: 700; }
+    .stat-label { color:#666; font-size: 12px; margin-top: 4px; }
+    .actions { display:flex; gap: 10px; justify-content:center; margin-top: 16px; flex-wrap:wrap; }
+    button { padding: 10px 14px; border: 1px solid #ddd; background:#fff; border-radius: 10px; cursor:pointer; }
+    button.primary { background:#111; color:#fff; border-color:#111; }
+    button:disabled { opacity:.55; cursor:not-allowed; }
+    .nav-links { display:flex; gap: 10px; margin-top: 20px; }
+    a { color:#111; text-decoration: none; font-size: 14px; }
+    a:hover { text-decoration: underline; }
+    .muted { color:#666; font-size: 13px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="topbar">
+      <h1 style="margin:0;">Linkhub</h1>
+      <div style="display:flex; gap: 10px; align-items:center; flex-wrap:wrap;">
+        <div class="pill" id="userPill">Not logged in</div>
+        <button id="logoutBtn" type="button" style="display:none;">Logout</button>
+        <button type="button" onclick="location.href='/pages/login.html'">Login</button>
+      </div>
+    </div>
+
+    <div class="profile-card" id="profileCard">
+      <div class="avatar-large" id="avatar">U</div>
+      <h2 class="profile-name" id="userName">User Name</h2>
+      <p class="profile-handle" id="userHandle">@username</p>
+      <p class="profile-bio" id="userBio">Bio goes here</p>
+
+      <div class="profile-stats">
+        <div class="stat">
+          <div class="stat-number" id="postsCount">0</div>
+          <div class="stat-label">Posts</div>
+        </div>
+        <div class="stat">
+          <div class="stat-number" id="followersCount">0</div>
+          <div class="stat-label">Followers</div>
+        </div>
+        <div class="stat">
+          <div class="stat-number" id="followingCount">0</div>
+          <div class="stat-label">Following</div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button id="editProfileBtn" type="button" style="display:none;">Edit Profile</button>
+        <button type="button" onclick="location.href='/pages/feed.html'">Back to Feed</button>
+      </div>
+    </div>
+
+    <div class="nav-links">
+      <a href="/pages/login.html">Login</a>
+      <a href="/pages/feed.html">Feed</a>
+      <a href="/pages/profile.html">Profile</a>
+    </div>
+  </div>
+
+  <script src="/js/app.js"></script>
+</body>
+</html>

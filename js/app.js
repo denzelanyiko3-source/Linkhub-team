@@ -76,7 +76,7 @@ function serveStatic(req, res) {
   if (urlPath === '/') urlPath = '/index.html';
 
   // prevent path traversal
-  urlPath = urlPath.replace(/\.+/g, '');
+  urlPath = urlPath.replace(/\.\.\//g, '');
   const filePath = path.join(ROOT, urlPath);
 
   if (!fs.existsSync(filePath) || fs.statSync(filePath).isDirectory()) {
