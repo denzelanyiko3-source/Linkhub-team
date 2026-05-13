@@ -116,3 +116,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   await loadAdminAuth();
   await loadAdminDashboard();
 });
+
+// Dark mode toggle (admin page doesn't load js/app.js)
+try {
+  if (window.initDarkModeToggle) window.initDarkModeToggle();
+} catch (_) {}
+
+

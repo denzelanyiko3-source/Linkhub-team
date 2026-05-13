@@ -44,4 +44,13 @@ if (loginForm) {
   loginForm.addEventListener('submit', handleLogin);
 }
 
-document.addEventListener('DOMContentLoaded', checkAlreadyLoggedIn);
+document.addEventListener('DOMContentLoaded', () => {
+  checkAlreadyLoggedIn();
+});
+
+// Dark mode toggle (login page doesn't load js/app.js)
+try {
+  if (window.initDarkModeToggle) window.initDarkModeToggle();
+} catch (_) {}
+
+

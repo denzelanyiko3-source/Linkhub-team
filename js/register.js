@@ -50,4 +50,13 @@ if (registerForm) {
   registerForm.addEventListener('submit', handleRegister);
 }
 
-document.addEventListener('DOMContentLoaded', checkAlreadyLoggedIn);
+document.addEventListener('DOMContentLoaded', () => {
+  checkAlreadyLoggedIn();
+});
+
+// Dark mode toggle (register page doesn't load js/app.js)
+try {
+  if (window.initDarkModeToggle) window.initDarkModeToggle();
+} catch (_) {}
+
+
