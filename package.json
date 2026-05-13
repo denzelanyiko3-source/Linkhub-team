@@ -1,0 +1,12 @@
+{
+  "name": "Linkhub-team",
+  "version": "0.0.0",
+  "private": true,
+  "type": "commonjs",
+  "scripts": {
+    "start": "node js/app.js",
+    "dev": "node js/app.js"
+  },
+  "dependencies": {}
+}
+

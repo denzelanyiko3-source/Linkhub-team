@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Login - Linkhub</title>
+  <style>
+    body { font-family: system-ui, Arial, sans-serif; margin: 24px; }
+    .card { max-width: 420px; padding: 16px; border: 1px solid #e5e5e5; border-radius: 12px; }
+    label { display:block; margin-top: 12px; font-weight: 600; }
+    input { width:100%; padding: 10px; margin-top: 6px; border: 1px solid #ddd; border-radius: 10px; }
+    button { margin-top: 16px; padding: 10px 14px; background:#111; color:#fff; border:0; border-radius: 10px; cursor:pointer; }
+    .row { display:flex; gap: 10px; align-items:center; margin-top: 12px; }
+    .hint { color:#555; font-size: 13px; line-height:1.4; }
+    a { color:#111; }
+  </style>
+</head>
+<body>
+  <h1>Linkhub</h1>
+  <div class="card">
+    <h2 style="margin-top:0;">Login</h2>
+
+    <form id="loginForm">
+      <label for="email">Email</label>
+      <input id="email" name="email" type="email" autocomplete="email" required />
+
+      <label for="password">Password</label>
+      <input id="password" name="password" type="password" autocomplete="current-password" required />
+
+      <button type="submit">Login</button>
+    </form>
+
+    <div id="status" class="hint" style="margin-top: 12px;"></div>
+
+    <p class="hint">
+      Demo users are stored in <code>data/store.json</code> (password is not verified by backend in this template).
+    </p>
+
+    <div class="row">
+      <a href="/pages/feed.html">Go to Feed</a>
+    </div>
+  </div>
+
+  <script src="/js/login-ui.js"></script>
+</body>
+</html>
+

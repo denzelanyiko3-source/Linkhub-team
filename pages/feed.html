@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Feed - Linkhub</title>
+  <style>
+    body { font-family: system-ui, Arial, sans-serif; margin: 24px; }
+    .topbar { display:flex; justify-content:space-between; align-items:center; gap: 12px; flex-wrap:wrap; }
+    .pill { padding: 8px 12px; border: 1px solid #e5e5e5; border-radius: 999px; font-size: 14px; }
+    .container { max-width: 920px; margin: 0 auto; }
+    .grid { display:grid; grid-template-columns: 1fr; gap: 14px; margin-top: 16px; }
+    .post { border: 1px solid #e5e5e5; border-radius: 14px; padding: 14px; }
+    .meta { display:flex; gap: 10px; align-items:flex-start; }
+    .avatar { width: 38px; height: 38px; border-radius: 50%; background:#111; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; }
+    .author { font-weight: 700; }
+    .time { color:#666; font-size: 13px; margin-top:2px; }
+    .text { margin-top: 10px; white-space: pre-wrap; }
+    .actions { display:flex; gap: 10px; margin-top: 12px; flex-wrap:wrap; align-items:center; }
+    button { padding: 8px 12px; border: 1px solid #ddd; background:#fff; border-radius: 10px; cursor:pointer; }
+    button.primary { background:#111; color:#fff; border-color:#111; }
+    button:disabled { opacity:.55; cursor:not-allowed; }
+    .comments { margin-top: 12px; border-top: 1px solid #f0f0f0; padding-top: 12px; }
+    .comment { display:flex; gap: 10px; margin-top: 10px; }
+    .comment .bubble { flex:1; border: 1px solid #eee; border-radius: 12px; padding: 10px; }
+    .comment .bubble .authorline { font-weight: 700; font-size: 13px; }
+    .comment .bubble .ctext { margin-top: 4px; white-space: pre-wrap; }
+    .comment-form { display:flex; gap: 10px; margin-top: 10px; }
+    textarea { flex:1; min-height: 42px; max-height: 120px; resize: vertical; padding: 10px; border: 1px solid #ddd; border-radius: 10px; }
+    .muted { color:#666; font-size: 13px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="topbar">
+      <div>
+        <h1 style="margin:0 0 4px 0;">Linkhub Feed</h1>
+        <div class="muted" id="authHint"></div>
+      </div>
+      <div style="display:flex; gap: 10px; align-items:center; flex-wrap:wrap;">
+        <div class="pill" id="userPill">Not logged in</div>
+        <button id="logoutBtn" type="button" style="display:none;">Logout</button>
+        <button type="button" onclick="location.href='/pages/login.html'">Login</button>
+      </div>
+    </div>
+
+    <div class="grid" id="posts"></div>
+  </div>
+
+  <script src="/js/feed.js"></script>
+</body>
+</html>
+
