@@ -368,6 +368,36 @@ app.get('/api/groups', async (req, res) => {
   }
 });
 
+app.post('/api/groups/:id/join', ensureAuth, async (req, res) => {
+  try {
+    const groupId = Number(req.params.id);
+    if (!groupId) {
+      return res.status(400).json({ error: 'Invalid group id' });
+    }
+
+    if (dbConnected) {
+      const group = await Group.findOne({ id: groupId });
+      if (!group) {
+        return res.status(404).json({ error: 'Group not found' });
+      }
+      group.members = Number(group.members) + 1;
+      await group.save();
+      return res.json(group);
+    }
+
+    const data = await readData();
+    const group = (data.groups || []).find(g => g.id === groupId);
+    if (!group) {
+      return res.status(404).json({ error: 'Group not found' });
+    }
+    group.members = Number(group.members) + 1;
+    await writeData(data);
+    res.json(group);
+  } catch (error) {
+    res.status(500).json({ error: 'Unable to join group' });
+  }
+});
+
 app.get('/api/events', async (req, res) => {
   try {
     const events = await getEvents();

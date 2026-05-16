@@ -62,6 +62,21 @@ async function createGroup(groupData) {
   }
 }
 
+async function joinGroup(groupId) {
+  try {
+    const { res, data } = await api(`/api/groups/${groupId}/join`, {
+      method: 'POST',
+    });
+    if (!res.ok) {
+      throw new Error(data?.error || 'Failed to join group');
+    }
+    return data;
+  } catch (error) {
+    console.error('Error joining group:', error);
+    throw error;
+  }
+}
+
 function escapeHtml(str) {
   const div = document.createElement('div');
   div.textContent = str;
@@ -78,7 +93,7 @@ function renderGroupCard(group) {
         <div style="color: #666; font-size: 14px;">
           👥 ${group.members || 0} members
         </div>
-        <button class="chip" type="button" style="background: #111; color: #fff; border: none; cursor: pointer; padding: 6px 12px; border-radius: 20px;">
+        <button class="chip join-group-btn" type="button" data-group-id="${group.id}" style="background: #111; color: #fff; border: none; cursor: pointer; padding: 6px 12px; border-radius: 20px;">
           Join
         </button>
       </div>
@@ -109,6 +124,22 @@ document.addEventListener('DOMContentLoaded', async () => {
     const groups = await loadGroups();
     if (groupsContainer) {
       groupsContainer.innerHTML = groups.map(g => renderGroupCard(g)).join('');
+      groupsContainer.querySelectorAll('.join-group-btn').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          if (!user) {
+            window.location.href = '/pages/login.html';
+            return;
+          }
+          try {
+            const groupId = btn.getAttribute('data-group-id');
+            await joinGroup(groupId);
+            window.location.reload();
+          } catch (error) {
+            console.error('Error joining group:', error);
+            alert('Failed to join group: ' + error.message);
+          }
+        });
+      });
     }
   } catch (error) {
     console.error('Failed to load groups:', error);
