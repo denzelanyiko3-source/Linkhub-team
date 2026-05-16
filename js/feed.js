@@ -1,35 +1,79 @@
 async function fetchJson(path, options) {
-  const res = await fetch(path, options);
-  let data;
   try {
-    data = await res.json();
-  } catch {
-    data = null;
+    const res = await fetch(path, options);
+    let data;
+    try {
+      data = await res.json();
+    } catch {
+      data = null;
+    }
+    return { res, data };
+  } catch (error) {
+    console.error('Fetch error:', error);
+    return { res: { ok: false }, data: { error: 'Network error' } };
   }
-  return { res, data };
 }
 
 async function getMe() {
-  const { res, data } = await fetchJson('/api/auth/me', { method: 'GET' });
-  if (!res.ok) return null;
-  return data && data.user ? data.user : null;
+  try {
+    const { res, data } = await fetchJson('/api/auth/me', { method: 'GET' });
+    if (!res.ok) return null;
+    return data && data.user ? data.user : null;
+  } catch (error) {
+    console.error('Error getting user:', error);
+    return null;
+  }
 }
 
 async function getPosts() {
-  const { res, data } = await fetchJson('/api/posts', { method: 'GET' });
-  if (!res.ok) return [];
-  return data || [];
+  try {
+    const { res, data } = await fetchJson('/api/posts', { method: 'GET' });
+    if (!res.ok) {
+      console.error('Error loading posts:', data?.error);
+      return [];
+    }
+    return data || [];
+  } catch (error) {
+    console.error('Error loading posts:', error);
+    return [];
+  }
+}
+
+async function createPost(text) {
+  try {
+    const { res, data } = await fetchJson('/api/posts', {
+      method: 'POST',
+      body: JSON.stringify({ text }),
+    });
+    if (!res.ok) {
+      throw new Error(data?.error || 'Failed to create post');
+    }
+    return { res, data };
+  } catch (error) {
+    console.error('Error creating post:', error);
+    return { res: { ok: false }, data: { error: error.message || 'Failed to create post' } };
+  }
 }
 
 async function likePost(id) {
-  return fetchJson(`/api/posts/${id}/like`, { method: 'POST' });
+  try {
+    return await fetchJson(`/api/posts/${id}/like`, { method: 'POST' });
+  } catch (error) {
+    console.error('Error liking post:', error);
+    return { res: { ok: false }, data: { error: 'Network error' } };
+  }
 }
 
 async function commentPost(id, text) {
-  return fetchJson(`/api/posts/${id}/comments`, {
-    method: 'POST',
-    body: JSON.stringify({ text }),
-  });
+  try {
+    return await fetchJson(`/api/posts/${id}/comments`, {
+      method: 'POST',
+      body: JSON.stringify({ text }),
+    });
+  } catch (error) {
+    console.error('Error commenting:', error);
+    return { res: { ok: false }, data: { error: 'Network error' } };
+  }
 }
 
 async function postElement(post, me) {
@@ -75,34 +119,43 @@ async function postElement(post, me) {
   const likeCount = wrap.querySelector('.likeCount');
 
   likeBtn.addEventListener('click', async () => {
-    const { res, data } = await likePost(post.id);
-    if (!res.ok) {
-      alert((data && data.error) ? data.error : 'Like failed');
-      return;
+    try {
+      const { res, data } = await likePost(post.id);
+      if (!res.ok) {
+        alert((data && data.error) ? data.error : 'Like failed');
+        return;
+      }
+      likeCount.textContent = Number(data.likes || 0);
+    } catch (error) {
+      console.error('Like error:', error);
+      alert('Failed to like post');
     }
-    likeCount.textContent = Number(data.likes || 0);
   });
 
   const shareBtn = wrap.querySelector('.shareBtn');
   shareBtn.addEventListener('click', async () => {
-    const shareUrl = location.origin + '/pages/feed.html';
-    const payload = { title: 'Linkhub', text: post.text || '', url: shareUrl };
+    try {
+      const shareUrl = location.origin + '/pages/feed.html';
+      const payload = { title: 'Linkhub', text: post.text || '', url: shareUrl };
 
-    if (navigator.share) {
-      try {
-        await navigator.share(payload);
-        return;
-      } catch (e) {
-        // user cancelled or error; fall through to clipboard
+      if (navigator.share) {
+        try {
+          await navigator.share(payload);
+          return;
+        } catch (e) {
+          // user cancelled or error; fall through to clipboard
+        }
       }
-    }
 
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      await navigator.clipboard.writeText(payload.url);
-      alert('Link copied to clipboard');
-    } else {
-      // last resort
-      prompt('Copy link:', payload.url);
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(payload.url);
+        alert('Link copied to clipboard');
+      } else {
+        // last resort
+        prompt('Copy link:', payload.url);
+      }
+    } catch (error) {
+      console.error('Share error:', error);
     }
   });
 
@@ -112,19 +165,24 @@ async function postElement(post, me) {
   const commentCountEl = wrap.querySelector('.commentCount');
 
   commentBtn.addEventListener('click', async () => {
-    const text = (commentText.value || '').trim();
-    if (!text) return;
+    try {
+      const text = (commentText.value || '').trim();
+      if (!text) return;
 
-    const { res, data } = await commentPost(post.id, text);
-    if (!res.ok) {
-      alert((data && data.error) ? data.error : 'Comment failed');
-      return;
+      const { res, data } = await commentPost(post.id, text);
+      if (!res.ok) {
+        alert((data && data.error) ? data.error : 'Comment failed');
+        return;
+      }
+
+      // backend returns whole post; rerender comments
+      commentList.innerHTML = renderComments(data.comments || []);
+      commentCountEl.textContent = String((data.comments || []).length);
+      commentText.value = '';
+    } catch (error) {
+      console.error('Comment error:', error);
+      alert('Failed to post comment');
     }
-
-    // backend returns whole post; rerender comments
-    commentList.innerHTML = renderComments(data.comments || []);
-    commentCountEl.textContent = String((data.comments || []).length);
-    commentText.value = '';
   });
 
   return wrap;
@@ -148,12 +206,9 @@ function renderComments(comments) {
 }
 
 function escapeHtml(str) {
-  return String(str)
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '<')
-    .replaceAll('>', '>')
-    .replaceAll('"', '"')
-    .replaceAll("'", '&#039;');
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -161,6 +216,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const userPill = document.getElementById('userPill');
   const authHint = document.getElementById('authHint');
   const logoutBtn = document.getElementById('logoutBtn');
+  const postsEl = document.getElementById('posts');
 
   if (me) {
     userPill.textContent = `Logged in as ${me.name}`;
@@ -172,17 +228,87 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   logoutBtn.addEventListener('click', async () => {
-    await fetch('/api/auth/logout', { method: 'POST' });
-    window.location.reload();
+    try {
+      await fetchJson('/api/auth/logout', { method: 'POST' });
+      window.location.reload();
+    } catch (error) {
+      console.error('Logout error:', error);
+      window.location.reload();
+    }
   });
 
-  const posts = await getPosts();
-  const postsEl = document.getElementById('posts');
-  postsEl.innerHTML = '';
+  // Add post creation form if logged in
+  if (me && postsEl) {
+    const createPostForm = document.createElement('div');
+    createPostForm.className = 'post';
+    createPostForm.innerHTML = `
+      <div style="margin-bottom: 12px;">
+        <textarea id="newPostText" placeholder="What's on your mind?" style="width: 100%; min-height: 100px; padding: 10px; border: 1px solid #ddd; border-radius: 10px; font-family: system-ui; resize: vertical;"></textarea>
+      </div>
+      <button id="createPostBtn" class="primary" style="padding: 8px 16px; background: #111; color: #fff; border: none; border-radius: 10px; cursor: pointer; font-weight: 600;">Post</button>
+      <div id="postError" style="margin-top: 8px; color: var(--danger); font-size: 14px; display: none;"></div>
+    `;
+    postsEl.appendChild(createPostForm);
 
-  for (const p of posts) {
-    const el = await postElement(p, me);
-    postsEl.appendChild(el);
+    const createPostBtn = createPostForm.querySelector('#createPostBtn');
+    const newPostText = createPostForm.querySelector('#newPostText');
+    const postError = createPostForm.querySelector('#postError');
+
+    createPostBtn.addEventListener('click', async () => {
+      try {
+        const text = (newPostText.value || '').trim();
+        if (!text) {
+          postError.textContent = 'Please write something';
+          postError.style.display = 'block';
+          return;
+        }
+
+        createPostBtn.disabled = true;
+        createPostBtn.textContent = 'Posting...';
+        postError.style.display = 'none';
+
+        const { res, data } = await createPost(text);
+        if (!res.ok) {
+          postError.textContent = data?.error || 'Failed to create post';
+          postError.style.display = 'block';
+          createPostBtn.disabled = false;
+          createPostBtn.textContent = 'Post';
+          return;
+        }
+
+        newPostText.value = '';
+        postError.style.display = 'none';
+        createPostBtn.disabled = false;
+        createPostBtn.textContent = 'Post';
+
+        // Reload posts
+        window.location.reload();
+      } catch (error) {
+        console.error('Create post error:', error);
+        postError.textContent = 'Error creating post';
+        postError.style.display = 'block';
+        createPostBtn.disabled = false;
+        createPostBtn.textContent = 'Post';
+      }
+    });
+  }
+
+  // Load and display posts
+  try {
+    const posts = await getPosts();
+    if (postsEl) {
+      // Add posts after the create form (if it exists)
+      const existingChildren = Array.from(postsEl.children);
+      for (const p of posts) {
+        const el = await postElement(p, me);
+        postsEl.appendChild(el);
+      }
+    }
+  } catch (error) {
+    console.error('Error loading posts:', error);
+    if (postsEl) {
+      postsEl.innerHTML = '<div style="color: var(--danger);">Error loading posts</div>';
+    }
   }
 });
 

@@ -4,13 +4,18 @@
   "private": true,
   "type": "commonjs",
   "scripts": {
-    "start": "node js/app.js",
-    "dev": "nodemon js/app.js"
+    "start": "node server.js",
+    "dev": "nodemon server.js"
   },
   "dependencies": {
-    "uuid": "^9.0.0",
+    "express": "^4.18.2",
+    "mongoose": "^7.0.0",
+    "bcrypt": "^5.1.0",
+    "express-session": "^1.17.3",
+    "connect-mongo": "^5.0.1",
+    "cors": "^2.8.5",
     "dotenv": "^16.0.0",
-    "cors": "^2.8.5"
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"
