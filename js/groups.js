@@ -164,14 +164,21 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         await createGroup(groupData);
         createForm.reset();
-        // Reload groups
         window.location.reload();
       } catch (error) {
         console.error('Error creating group:', error);
-        alert('Failed to create group: ' + error.message);
+        alert('Failed to create group: ' + (error?.message || error));
       }
     });
   } else if (createForm) {
-    createForm.style.display = 'none';
+    // Don’t silently hide the form; show why it can’t be used.
+    createForm.insertAdjacentHTML(
+      'afterend',
+      `<div class="auth-hint" style="color: #fff; background: rgba(0,0,0,0.25); padding: 12px 16px; border-radius: 8px;">
+        <strong>Sign in required:</strong> Please sign in to create a group.
+        <a href="/pages/login.html" style="margin-left: 8px; color: #fff; text-decoration: underline;">Go to login</a>
+      </div>`
+    );
   }
 });
+
