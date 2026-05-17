@@ -1,3 +1,4 @@
+
 async function api(path, options) {
   try {
     const res = await fetch(path, {
@@ -64,7 +65,7 @@ async function createEvent(eventData) {
 
 async function joinEvent(eventId) {
   try {
-    const { res, data } = await api(`/api/events/${eventId}/join`, {
+    const { res, data } = await api(`/api/events/${encodeURIComponent(eventId)}/join`, {
       method: 'POST',
     });
     if (!res.ok) {
@@ -76,6 +77,7 @@ async function joinEvent(eventId) {
     throw error;
   }
 }
+
 
 function escapeHtml(str) {
   const div = document.createElement('div');

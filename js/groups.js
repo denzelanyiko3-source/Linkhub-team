@@ -64,7 +64,7 @@ async function createGroup(groupData) {
 
 async function joinGroup(groupId) {
   try {
-    const { res, data } = await api(`/api/groups/${groupId}/join`, {
+    const { res, data } = await api(`/api/groups/${encodeURIComponent(groupId)}/join`, {
       method: 'POST',
     });
     if (!res.ok) {
@@ -76,6 +76,7 @@ async function joinGroup(groupId) {
     throw error;
   }
 }
+
 
 function escapeHtml(str) {
   const div = document.createElement('div');
