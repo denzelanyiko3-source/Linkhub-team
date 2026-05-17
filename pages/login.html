@@ -41,7 +41,25 @@
     </div>
   </div>
 
-  <script src="/js/login-ui.js"></script>
+  <main class="layout" style="padding-top: 2rem;">
+    <section style="max-width: 520px; margin: 0 auto;">
+      <div class="card">
+        <h1>Welcome to LinkHub</h1>
+        <p>Sign in to manage posts, join groups, and access the admin dashboard.</p>
+        <form id="login-form" style="display: grid; gap: 1rem; margin-top: 1rem;">
+          <input type="email" name="email" placeholder="Email" required />
+          <input type="password" name="password" placeholder="Password" required />
+          <button type="submit" class="btn-primary">Sign In</button>
+          <div id="login-error" style="color: var(--danger); font-size: 0.95rem;"></div>
+        </form>
+        <div class="form-note">
+          New to LinkHub? <a href="register.html" class="form-link">Create an account</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../js/login.js"></script>
 </body>
 </html>
 

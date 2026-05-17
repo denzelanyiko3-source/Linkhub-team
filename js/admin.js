@@ -130,40 +130,6 @@ function escapeHtml(str) {
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
-  const statsContainer = document.getElementById('admin-stats');
-  const usersContainer = document.getElementById('admin-users');
-
-  // Check authentication
-  const user = await checkAuth();
-  if (!user) {
-    if (statsContainer) statsContainer.innerHTML = '<p style="color: var(--danger);">Not authorized. Redirecting to login...</p>';
-    return;
-  }
-
-  // Load and render stats
-  try {
-    const stats = await loadAdminStats();
-    if (statsContainer) {
-      statsContainer.innerHTML = renderStats(stats);
-    }
-  } catch (error) {
-    console.error('Failed to load stats:', error);
-    if (statsContainer) {
-      statsContainer.innerHTML = `<p style="color: var(--danger);">Error loading statistics: ${escapeHtml(error.message)}</p>`;
-    }
-  }
-
-  // Load and render users
-  try {
-    const users = await loadAdminUsers();
-    if (usersContainer) {
-      usersContainer.innerHTML = renderUsersList(users);
-    }
-  } catch (error) {
-    console.error('Failed to load users:', error);
-    if (usersContainer) {
-      usersContainer.innerHTML = `<p style="color: var(--danger);">Error loading users: ${escapeHtml(error.message)}</p>`;
-    }
-  }
+  await loadAdminAuth();
+  await loadAdminDashboard();
 });
-

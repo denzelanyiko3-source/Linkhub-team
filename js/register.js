@@ -20,53 +20,21 @@ async function api(path, options) {
   }
 }
 
-function setStatus(el, msg, isError = false) {
-  el.textContent = msg;
-  el.style.color = isError ? 'var(--danger)' : 'var(--success)';
+async function checkAlreadyLoggedIn() {
+  try {
+    const response = await fetch('/api/auth/me');
+    if (!response.ok) return;
+    const result = await response.json();
+    if (result.user) {
+      window.location.href = '../index.html';
+    }
+  } catch (error) {
+    console.warn('Unable to check authentication status', error);
+  }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  const form = document.getElementById('register-form');
-  const errorEl = document.getElementById('register-error');
+if (registerForm) {
+  registerForm.addEventListener('submit', handleRegister);
+}
 
-  if (!form) {
-    console.error('Register form not found');
-    return;
-  }
-
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-
-    const name = document.querySelector('input[name="name"]').value.trim();
-    const email = document.querySelector('input[name="email"]').value.trim();
-    const password = document.querySelector('input[name="password"]').value;
-
-    if (!name || !email || !password) {
-      setStatus(errorEl, 'All fields are required', true);
-      return;
-    }
-
-    if (password.length < 6) {
-      setStatus(errorEl, 'Password must be at least 6 characters', true);
-      return;
-    }
-
-    setStatus(errorEl, 'Creating account...', false);
-
-    const { res, data } = await api('/api/auth/register', {
-      method: 'POST',
-      body: JSON.stringify({ name, email, password }),
-    });
-
-    if (!res.ok) {
-      const error = data && data.error ? data.error : 'Registration failed';
-      setStatus(errorEl, error, true);
-      return;
-    }
-
-    setStatus(errorEl, 'Account created! Redirecting...', false);
-    setTimeout(() => {
-      window.location.href = '/pages/feed.html';
-    }, 1500);
-  });
-});
+document.addEventListener('DOMContentLoaded', checkAlreadyLoggedIn);
