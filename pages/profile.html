@@ -12,7 +12,7 @@
     <div class="topbar-left">
       <div class="topbar-logo">LH</div>
       <div class="topbar-search">
-        <span style="font-size: 0.85rem; color: #65676b;">🔍</span>
+        <span style="font-size: 0.85rem; color: #65676b;">💚</span>
         <input placeholder="Search LinkHub" />
       </div>
     </div>
@@ -30,40 +30,40 @@
       <a href="admin.html" class="chip" style="text-decoration: none;">Admin</a>
       <button id="logout-button" class="chip logout-btn" style="display: none; border: none; background: #e4e6eb;">Sign Out</button>
       <div id="dark-mode-toggle" class="chip" style="cursor: pointer;">🌙</div>
-      <div class="chip">⋯</div>
+      <div class="chip">⏱</div>
     </div>
   </header>
 
-  <main class="layout" style="padding-top: 2rem;">
-    <section class="card" style="max-width: 860px; margin: 0 auto;">
-      <div style="display:flex; align-items:flex-start; justify-content:space-between; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.25rem;">
-        <div data-profile-container style="width: 100%;"></div>
+  <main class="layout profile-layout">
+    <section class="card profile-shell">
+      <div class="profile-container-wrap">
+        <div data-profile-container class="profile-container"></div>
       </div>
 
-      <div style="margin-top: 1.25rem; display:grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem;">
-        <div class="card" style="box-shadow:none; background: var(--card-bg); border: 1px solid var(--border);">
-          <div style="padding: 1rem;">
-            <div class="card-subtitle" style="color: var(--muted);">Quick actions</div>
-            <div style="display:flex; gap: 0.75rem; margin-top: 0.75rem; flex-wrap: wrap;">
-              <a href="groups.html" class="btn-primary" style="text-decoration:none; display:inline-flex; align-items:center; justify-content:center;">Browse Groups</a>
-              <a href="events.html" class="btn-primary" style="text-decoration:none; display:inline-flex; align-items:center; justify-content:center;">Find Events</a>
+      <div class="profile-stats-grid">
+        <div class="profile-side-card">
+          <div class="profile-side-card-inner">
+            <div class="card-subtitle">Quick actions</div>
+            <div class="profile-quick-actions">
+              <a href="groups.html" class="btn-primary">Browse Groups</a>
+              <a href="events.html" class="btn-primary">Find Events</a>
             </div>
           </div>
         </div>
 
-        <div class="card" style="box-shadow:none; background: var(--card-bg); border: 1px solid var(--border);">
-          <div style="padding: 1rem;">
-            <div class="card-subtitle" style="color: var(--muted);">Security</div>
-            <div style="color: var(--muted); margin-top: 0.5rem; line-height: 1.5; font-size: 0.95rem;">
+        <div class="profile-side-card">
+          <div class="profile-side-card-inner">
+            <div class="card-subtitle">Security</div>
+            <div class="profile-side-text">
               Sign out from the top bar to end your session.
             </div>
           </div>
         </div>
 
-        <div class="card" style="box-shadow:none; background: var(--card-bg); border: 1px solid var(--border);">
-          <div style="padding: 1rem;">
-            <div class="card-subtitle" style="color: var(--muted);">Admin</div>
-            <div style="color: var(--muted); margin-top: 0.5rem; line-height: 1.5; font-size: 0.95rem;">
+        <div class="profile-side-card">
+          <div class="profile-side-card-inner">
+            <div class="card-subtitle">Admin</div>
+            <div class="profile-side-text">
               If your account is an admin, you’ll see the Admin link.
             </div>
           </div>
